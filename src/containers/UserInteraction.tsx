@@ -1,16 +1,20 @@
 import * as React from "react";
-import Actions from './Actions';
 import MessageHistory from "./MessageHistory";
 import SendingMessage from "./SendingMessage";
 
+interface IUserInteractionProps {
+    currentUser : string
+}
 
+class UserInteraction extends React.Component<IUserInteractionProps, {}> {
+    constructor(props: IUserInteractionProps) {
+        super(props);
+    }
 
-class UserInteraction extends React.Component {
     public render() {
         return (
             <div className="right">
-                <Actions/>
-                <MessageHistory/>
+                <MessageHistory currentUser={this.props.currentUser}/>
                 <SendingMessage/>
             </div>
         );

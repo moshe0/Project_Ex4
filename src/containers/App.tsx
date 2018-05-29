@@ -1,20 +1,37 @@
+import Header from './Header';
+import Main from './Main';
 import * as React from 'react'
-import '../App.css';
-import Tree from './Tree';
-// import UserInteraction from "./UserInteraction";
-import UserInteraction from './UserInteraction';
+import StateStore from "../state/StateStore";
 
 
+interface IAppUserState{
+    currentUser : string
+}
 
-class App extends React.Component {
-  public render() {
-    return (
-        <div className="bodyClass">
-            <Tree/>
-            <UserInteraction/>
-        </div>
-    );
-  }
+class App extends React.Component<{}, IAppUserState>{
+    constructor(props: {}) {
+        super(props);
+
+        this.state = {
+            currentUser : StateStore.getInstance().state['Users'][0]
+        };
+
+        StateStore.getInstance().set('currentUser', this.state.currentUser);
+        StateStore.getInstance().subscribe(()=>{
+            this.forceUpdate();
+        });
+
+        this.forceUpdate();
+    }
+
+    public render() {
+      return (
+          <div className="bodyClass">
+              <Header/>
+              <Main currentUser={this.state.currentUser}/>
+          </div>
+      );
+    }
 }
 
 export default App;
