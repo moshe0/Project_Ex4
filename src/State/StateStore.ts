@@ -1,4 +1,8 @@
 import {DB} from "../dataBase/DB";
+import {User} from "../Model/User";
+import {NTree} from "../Model/NTree";
+import {Group} from "../Model/Group";
+import {Data} from "../Model/Data";
 
 
 interface IStateStore {
@@ -9,21 +13,29 @@ interface IStateStore {
 }
 
 export class StateStore implements IStateStore {
-    constructor(){
-        this.listeners = [];
-    }
-
     listeners: Function[];
     private DB = new DB();
     static instance: IStateStore;
+
+    Users : User[];
+    Groups : Group[];
+    RootNode : NTree;
+    TreeData : Data;
+    currentUser : User;
+    Reciver : User | Group;
 
     state: {} = {
         Users : this.DB.GetUsers(),
         Groups : this.DB.GetGroups(),
         RootNode : this.DB.GetRootNode(),
+        TreeData : this.DB.GetTreeData(),
         currentUser : null,
         Reciver : null,
     };
+
+    constructor(){
+        this.listeners = [];
+    }
 
     set(key: string, val: any) {
         this.state[key] = val;

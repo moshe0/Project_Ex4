@@ -1,15 +1,13 @@
 import * as React from "react";
-import StateStore from "../State/StateStore";
 import {User} from "../Model/User";
+import StateStore from "../state/StateStore";
+
 
 interface IHeaderState {
     currentUser : User
 }
 
-
 class Header extends React.Component<{},IHeaderState>  {
-
-
     constructor(props: {}) {
         super(props);
 
@@ -18,9 +16,7 @@ class Header extends React.Component<{},IHeaderState>  {
         };
 
         StateStore.getInstance().subscribe(() => {
-            this.setState({
-                currentUser: StateStore.getInstance().get('currentUser'),
-            });
+            this.setState({ currentUser: StateStore.getInstance().get('currentUser')} );
         });
     }
 

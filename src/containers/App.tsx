@@ -11,24 +11,24 @@ interface IAppUserState{
 class App extends React.Component<{}, IAppUserState>{
     constructor(props: {}) {
         super(props);
+        let state = StateStore.getInstance();
+        state = state;
 
         this.state = {
-            currentUser : StateStore.getInstance().state['Users'][0]
+            currentUser : StateStore.getInstance().get('Users')[0]
         };
 
         StateStore.getInstance().set('currentUser', this.state.currentUser);
         StateStore.getInstance().subscribe(()=>{
             this.forceUpdate();
         });
-
-        this.forceUpdate();
     }
 
     public render() {
       return (
           <div className="bodyClass">
               <Header/>
-              <Main currentUser={this.state.currentUser}/>
+              <Main/>
           </div>
       );
     }

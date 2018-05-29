@@ -1,18 +1,18 @@
 import * as React from "react";
 import {Message} from "../Model/Message";
 import {DB} from "../dataBase/DB";
+import StateStore from "../state/StateStore";
 
 
 interface IMessageState{
     Messages: Message[];
 }
 
-interface IMessageHistoryProps {
-    currentUser : string
-}
+class MessageHistory extends React.Component <{}, IMessageState>{
 
-class MessageHistory extends React.Component <IMessageHistoryProps, IMessageState>{
-    constructor(props: IMessageHistoryProps) {
+    StateStore = StateStore.getInstance();
+
+    constructor(props: {}) {
         super(props);
 
         this.state = {
@@ -22,8 +22,8 @@ class MessageHistory extends React.Component <IMessageHistoryProps, IMessageStat
 
     public render() {
         const listMessages = this.state.Messages.map((item, idx) => {
-            const itemClassName = this.props.currentUser === item.SendingUser? 'MineMessage MessageHistory' : 'OtherMessage MessageHistory';
-            if(this.props.currentUser === item.SendingUser){
+            const itemClassName = this.StateStore.get('currentUser').Name === item.SendingUser? 'MineMessage MessageHistory' : 'OtherMessage MessageHistory';
+            if(this.StateStore.get('currentUser') === item.SendingUser){
                 return (
                     <div className={'message'} key={idx}>
                         <div className={itemClassName}>

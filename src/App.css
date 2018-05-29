@@ -40,35 +40,8 @@ html, body, .bodyClass, #root {
   background: url("Images/whatsapp.jpg");
 }
 
-.tree {
-  padding: 0.5em;
-  margin: 0;
-  list-style: none;
-  outline: none;
-}
 
-.group{
-  background: #52A3DE;
-  color: #004C85;
-  font-size: 25px;
-}
-
-.user{
-  background: #A4C4DB;
-  color: #34678C;
-  font-size: 25px;
-}
-
-.inFocus{
-  border: 1px solid black;
-  background: #FFEFD1;
-}
-
-
-.hidden{
-  display: none;
-}
-
+/************************************    SendingMessage   **************************************/
 .SendingMessage{
   display: flex;
   flex-direction: row;
@@ -99,8 +72,17 @@ button{
 button:hover {
   background-color: #046204;
 }
+/*************************************************************************************/
 
 
+
+
+
+
+
+
+
+/**************************** MessageHistory *******************************/
 .content {
   height: 100%;
   outline: none;
@@ -134,19 +116,25 @@ button:hover {
   color: gray;
 }
 
-
 .Date{
-  text-align: center;
-  background-color: #B2DBE1;
-  padding: 5px;
-  margin-left: 40%;
-  margin-right: 40%;
-  border-radius: 5px;
-  margin-top: 5px;
-  margin-buttom: 5px;
+    text-align: center;
+    background-color: #B2DBE1;
+    padding: 5px;
+    margin-left: 40%;
+    margin-right: 40%;
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-buttom: 5px;
 }
+/***********************************************************************/
 
 
+
+
+
+
+
+/************************   Header   **********************************/
 .LoginImage {
   background: url("Images/LoginUser/userLogin.png");
   width: 32px;
@@ -154,7 +142,6 @@ button:hover {
   margin: 7px;
   float: right;
 }
-
 
 div.LoginImage:hover{
   background: url("Images/LoginUser/userLoginH.png");
@@ -168,3 +155,43 @@ div.LoginImage:active{
   padding: 15px;
   font-size: 15px;
 }
+/************************************************************************/
+
+
+
+
+
+
+
+
+/********************   tree    *****************/
+.tree {
+    padding: 0.5em;
+    margin: 0;
+    list-style: none;
+    outline: none;
+}
+
+.group{
+    font-size: 25px;
+}
+
+.user{
+    font-size: 25px;
+}
+
+.inFocus{
+    border: 1px solid black;
+    background: #057505;
+}
+
+.hidden{
+    display: none;
+}
+
+li{
+    user-select: none;
+    background: #b0cfb2;
+    color: white;
+}
+/***********************************************/
