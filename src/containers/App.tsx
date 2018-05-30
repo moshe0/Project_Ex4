@@ -11,8 +11,6 @@ interface IAppUserState{
 class App extends React.Component<{}, IAppUserState>{
     constructor(props: {}) {
         super(props);
-        let state = StateStore.getInstance();
-        state = state;
 
         this.state = {
             currentUser : StateStore.getInstance().get('Users')[0]

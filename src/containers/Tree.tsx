@@ -14,11 +14,6 @@ class Tree extends React.Component <{}, {}>{
 
 
     componentDidMount() {
-        //  jQuery
-        $(this.ref).append($('<h3>Im jQuery</h3>'));
-/*        $(this.ref).bind('click', () => {
-            console.log('sdf')
-        });*/
         new InitTree($(this.ref));
 
     }
@@ -34,7 +29,7 @@ class Tree extends React.Component <{}, {}>{
 
     public render() {
         return (
-            <ul className="left tree" ref={this.setRef}/>
+            <ul className="left tree" ref={this.setRef} tabIndex={0}/>
         );
     }
 }

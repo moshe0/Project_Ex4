@@ -25,8 +25,7 @@ export class InitTree {
         let image = document.createElement("img");
         image.style.margin = "5px";
         image.style.verticalAlign = "middle";
-        //image.src = "../Images/TreeImages/singleUser.png";
-        image.src = __dirname;// + "/singleUser.png";
+        image.src = "/TreeImages/singleUser.png";
 
         let img = $(image);
         let span = $("<span>");
@@ -57,8 +56,7 @@ export class InitTree {
         }
 
         if (!!data.items) {
-            //img.attr("src", "../Images/TreeImages/multipleUsers.png");
-            img.attr("src", "/multipleUsers.png");
+            img.attr("src", "/TreeImages/multipleUsers.png");
 
             for(let i=0 ; i<data.items.length ; i++)
                 this._Load(data.items[i], li, indentation + 25);
@@ -98,12 +96,18 @@ export class InitTree {
 
         $(this).addClass('inFocus');
         console.log('click');
+        this.SetReciver(this);
     }
 
      static clearFocusClass() {
          let itemFocused = $('.inFocus');
          itemFocused.removeClass('inFocus');
      }
+
+     SetReciver(item : any){
+         StateStore.getInstance().set('Reciver', 'qqqq');
+     }
+
 
 
 
