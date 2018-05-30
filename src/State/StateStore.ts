@@ -1,8 +1,7 @@
 import {DB} from "../dataBase/DB";
 import {User} from "../Model/User";
-import {NTree} from "../Model/NTree";
 import {Group} from "../Model/Group";
-import {Data} from "../Model/Data";
+import Imember from "../Model/Imember";
 
 
 interface IStateStore {
@@ -10,27 +9,26 @@ interface IStateStore {
     set(key: string, val: any): void
     get(key: string): any | null
     subscribe(listener :any) : void
+    onStoreChanged() : void
 }
 
 export class StateStore implements IStateStore {
     listeners: Function[];
-    private DB = new DB();
     static instance: IStateStore;
 
     Users : User[];
     Groups : Group[];
-    RootNode : NTree;
-    TreeData : Data;
+    Data : Imember[];
     currentUser : User;
-    Reciver : User | Group;
+    Reciver : Imember;
 
     state: {} = {
-        Users : this.DB.GetUsers(),
-        Groups : this.DB.GetGroups(),
-        RootNode : this.DB.GetRootNode(),
-        TreeData : this.DB.GetTreeData(),
+        Users : DB.GetUsers(),
+        Groups : DB.GetGroups(),
+        Data : DB.GetData(),
         currentUser : null,
-        Reciver : null,
+        Reciver : DB.GetUsers()[2],
+        // Reciver : null,
     };
 
     constructor(){
@@ -50,7 +48,7 @@ export class StateStore implements IStateStore {
         this.listeners.push(listener);
     }
 
-    private onStoreChanged(){
+    public onStoreChanged(){
         for(const listener of this.listeners){
             listener();
         }

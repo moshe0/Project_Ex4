@@ -10,48 +10,48 @@ interface IMessageState{
 
 class MessageHistory extends React.Component <{}, IMessageState>{
 
-    StateStore = StateStore.getInstance();
+    stateStore = StateStore.getInstance();
+    messagesBlock : any;
 
     constructor(props: {}) {
         super(props);
-
+        this.messagesBlock = React.createRef();
         this.state = {
-            Messages : new DB().GetMessages(),
-        }
+            Messages : DB.GetMessages(this.stateStore.get('currentUser').getName(), this.stateStore.get('Reciver').getName()),
+        };
+
+        this.stateStore.subscribe(()=>{
+            this.setState({
+                Messages: DB.GetMessages(this.stateStore.get('currentUser').getName(), this.stateStore.get('Reciver').getName())
+            })
+        });
+    }
+
+
+    componentDidMount(){
+        this.messagesBlock.current.scrollTop = this.messagesBlock.current.scrollHeight;
+    }
+
+    componentDidUpdate(){
+        this.messagesBlock.current.scrollTop = this.messagesBlock.current.scrollHeight;
     }
 
     public render() {
         const listMessages = this.state.Messages.map((item, idx) => {
-            const itemClassName = this.StateStore.get('currentUser').Name === item.SendingUser? 'MineMessage MessageHistory' : 'OtherMessage MessageHistory';
-            if(this.StateStore.get('currentUser') === item.SendingUser){
-                return (
-                    <div className={'message'} key={idx}>
-                        <div className={itemClassName}>
-                            {item.Content}
-                            <br/>
-                            <div className={'MessageTime'}>{item.TimeSent}</div>
-                        </div>
+            const itemClassName = this.stateStore.get('currentUser').Name === item.SendingUser? 'MineMessage MessageHistory' : 'OtherMessage MessageHistory';
+            return (
+                <div className={'message'} key={idx}>
+                    <div className={itemClassName}>
+                        {item.Content}
+                        <br/>
+                        <div className={'MessageTime'}>{item.TimeSent}</div>
                     </div>
-                );
-            }
-
-            else{
-                return (
-                    <div className={'message'} key={idx}>
-                        <div className={itemClassName}>
-                            {item.Content}
-                            <br/>
-                            <div className={'MessageTime'}>{item.TimeSent}</div>
-                        </div>
-                    </div>
-                );
-            }
-
+                </div>
+            );
         });
 
         return (
-            <div className="content">
-                {/* <div className={'Date'}>aaaa</div> */}
+            <div className="content" ref={this.messagesBlock}>
                 {listMessages}
             </div>
         );

@@ -1,7 +1,18 @@
-import {User} from './User'
+import Imember from "./Imember";
 
-export class Group {
-    constructor(public Name : string, public Users : User[]){}
+export class Group implements Imember{
+    constructor(public Name : string, public Members : Imember[]){}
+
+
+    getName(){
+        return this.Name;
+    }
+    getType(){
+        return 'group';
+    }
+    getItems(){
+        return this.Members;
+    }
 }
 
 

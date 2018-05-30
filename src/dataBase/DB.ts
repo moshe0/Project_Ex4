@@ -2,56 +2,76 @@ import * as moment from 'moment'
 import {Group} from './../Model/Group'
 import {User} from './../Model/User'
 import {Message} from './../Model/Message'
-import {NTree} from "../Model/NTree";
-import {Data} from "../Model/Data";
+import Imember from "../Model/Imember";
 
 export class DB {
-    constructor(public Messages?: Message[], public Users?: User[], public Groups?: Group[], public RootNode?: NTree, public TreeData ?: Data) {
-        this.Messages = [
-            new Message("שלום", 'Moshe', 'Yosef', moment().format('h:mm:ss')),
-            new Message("מה עניינים?", 'Yosef', 'Moshe', moment().format('h:mm:ss')),
-            new Message("מצוין", 'Moshe', 'Yosef', moment().format('h:mm:ss')),
-            new Message("יופי, להתראות", 'Yosef', 'Yosef', moment().format('h:mm:ss')),
-        ];
+    static Messages = [
+        new Message("שלום", 'Moshe', 'Yosef', moment().format('h:mm:ss')),
+        new Message("מה עניינים?", 'Yosef', 'Moshe', moment().format('h:mm:ss')),
+        new Message("מצוין", 'Moshe', 'Yosef', moment().format('h:mm:ss')),
+        new Message("יופי, להתראות", 'Yosef', 'Moshe', moment().format('h:mm:ss')),
+    ];
 
-        this.Users = [
-            new User('Moshe', '11', '28' ),
-            new User('Raz', '22', '27' ),
-            new User('Yosef', '33', '23' ),
-        ];
-
-        this.TreeData = new Data('group', 'Friends',[
-                        new Data('group', 'Best Friends', [
-                            new Data('user', 'Tommy')
-                           ]),
-                        new Data('user', 'Udi'),
-                        new Data('user', 'Ori'),
-                        new Data('user', 'Roni')
-                        ]);
+    static Users = [
+        new User('Moshe', '11', '28' ),
+        new User('Raz', '22', '27' ),
+        new User('Yosef', '33', '23' ),
+        new User('Tommy', '33', '23' ),
+        new User('Udi', '33', '23' ),
+        new User('Ori', '33', '23' ),
+        new User('Roni', '33', '23' ),
+    ];
 
 
-        this.Groups = [
-            new Group('Friends', []),
-            new Group('Best Friends', []),
-            new Group('All Friends',[])
-        ];
+    static Groups = DB.initGroups();
 
-        this.Groups[0].Users.push(this.Users[0]);
-        this.Groups[1].Users.push(this.Users[0], this.Users[2]);
-        this.Groups[2].Users.push(this.Users[0], this.Users[1], this.Users[2]);
+    static initGroups() :  Group[]{
+        let tmpGroup = [
+            new Group('Friends',
+                      [
+                            new Group('Best Friends',
+                                      [
+                                            new Group(
+                                                'Good Friends',
+                                                [DB.Users[3],
+                                                          DB.Users[4]]),
+                                          DB.Users[5],
+                                          DB.Users[6]]),
+                            DB.Users[0],
+                            DB.Users[1],
+                            DB.Users[2]])
+                ];
+        return tmpGroup;
+    }
+
+    static Data = DB.initData();
+
+    static initData(){
+        let data : Imember[] = [];
+        data = data.concat(DB.GetGroups());
+        data = data.concat(DB.GetUsers());
+        return data;
     }
 
 
+    static GetMessages(sender :string, reciver : string) : Message[]{
+        let resMessages : Message[] = [];
+        for(let i : number = 0 ; i<DB.Messages.length ; i++){
+            if(DB.Messages[i].SendingUser === sender && DB.Messages[i].Receiving === reciver ||
+               DB.Messages[i].SendingUser === reciver && DB.Messages[i].Receiving === sender)
+                resMessages.push(DB.Messages[i]);
+        }
+        return resMessages;
+    }
 
-    public GetMessages() : Message[]{
-        if(! this.Messages)
-            return [];
-        else
-            return this.Messages;
+    static SetMessage(m : Message){
+        if(! DB.Messages)
+            DB.Messages = [];
+        this.Messages.push(m);
     }
 
 
-    public  GetUsers() : User[] {
+    static  GetUsers() : User[] {
         if(! this.Users)
             return [];
         else
@@ -59,27 +79,19 @@ export class DB {
     }
 
 
-    public GetGroups() : Group[]{
-        if(! this.Groups)
+    static GetGroups() : Group[]{
+        if(! DB.Groups)
             return [];
         else
-            return this.Groups;
+            return DB.Groups;
     }
 
-    public GetRootNode() : NTree | null{
-        if(! this.RootNode)
-            return null;
+
+    static GetData() : Imember[]{
+        if(! DB.Data)
+            return [];
         else
-            return this.RootNode;
+            return DB.Data;
     }
-
-    public GetTreeData() : Data | null{
-        if(! this.TreeData)
-            return null;
-        else
-            return this.TreeData;
-    }
-
-
 }
 

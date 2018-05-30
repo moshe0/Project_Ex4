@@ -1,11 +1,11 @@
 // import {DB} from "../dataBase/DB";
 import StateStore from "../state/StateStore";
 import * as $ from "jquery";
-import {Data} from "../Model/Data";
+import Imember from "../Model/Imember";
 
 
 export class InitTree {
-    state = StateStore.getInstance().get('TreeData');
+    data = StateStore.getInstance().get('Data');
     constructor(public element : any){
         let ul = document.querySelector("ul");
         if(ul)
@@ -16,52 +16,55 @@ export class InitTree {
 
     public Load(){
         this.clear();
-        this._Load(this.state, null, 0);
+        this._Load(this.data, '', 0);
     }
 
 
-    private _Load(data : Data, parent : any, indentation : number) {
+    private _Load(data : Imember[], parent : any, indentation : number) {
 
-        let image = document.createElement("img");
-        image.style.margin = "5px";
-        image.style.verticalAlign = "middle";
-        image.src = "/TreeImages/singleUser.png";
+        for (let i = 0; i < data.length; i++) {
+            let image = document.createElement("img");
+            image.style.margin = "5px";
+            image.style.verticalAlign = "middle";
+            image.src = "/TreeImages/singleUser.png";
 
-        let img = $(image);
-        let span = $("<span>");
-        img.appendTo(span);
+            let img = $(image);
+            let span = $("<span>");
+            img.appendTo(span);
 
-        let liTmp = document.createElement("li");
-        liTmp.style.textIndent = indentation + "px";
-        let li = $(liTmp);
+            let liTmp = document.createElement("li");
+            liTmp.style.textIndent = indentation + "px";
+            let li = $(liTmp);
 
-        span.appendTo(li);
-        li.addClass(data.type);
-        li.append(data.name);
-        li.appendTo(this.element);
-        li.on('dblclick', () =>{
-            this.dblclick();
-        });
-        li.on('click', this.click);
-        li.data('parent', parent);
+            span.appendTo(li);
+            let dd = data[i].getType();
+            li.addClass(dd);
+            li.append(data[i].getName());
+            li.appendTo(this.element);
+            li.on('dblclick', () => {
+                this.dblclick();
+            });
+            li.on('click', this.click);
+            li.data('parent', parent);
 
-        if (indentation > 0) {
-            li.addClass('hidden');
-            if (!parent.data('items')) {
-                parent.data('items', []);
-                parent.data('items').push(li);
+            if (indentation > 0) {
+                li.addClass('hidden');
+                if (!parent.data('items')) {
+                    parent.data('items', []);
+                    parent.data('items').push(li);
+                }
+                else
+                    parent.data('items').push(li);
             }
-            else
-                parent.data('items').push(li);
-        }
 
-        if (!!data.items) {
-            img.attr("src", "/TreeImages/multipleUsers.png");
+            if (data[i].getItems().length > 0) {
+                img.attr("src", "/TreeImages/multipleUsers.png");
 
-            for(let i=0 ; i<data.items.length ; i++)
-                this._Load(data.items[i], li, indentation + 25);
+                for (let i = 0; i < data[i].getItems().length; i++)
+                    this._Load(data[i].getItems(), li, indentation + 25);
             }
         }
+    }
 
     clear(){
         this.element[0].innerHTML = '';
@@ -96,39 +99,65 @@ export class InitTree {
 
         $(this).addClass('inFocus');
         console.log('click');
-        this.SetReciver(this);
+        InitTree.inFocusChanged();
     }
 
-     static clearFocusClass() {
+    static inFocusChanged(){
+        let itemFocused = $('.inFocus');
+
+        let pathArr : string[] = [];
+        while(typeof (itemFocused) !== 'string' ){
+            pathArr.splice(0, 0, itemFocused.text());
+            itemFocused = itemFocused.data('parent');
+        }
+        let Reciver = InitTree.getMemberFromPathArr(pathArr, StateStore.getInstance().get('Data'), 0);
+        StateStore.getInstance().set('Reciver', Reciver);
+    }
+
+    static getMemberFromPathArr(pathArr : string[], data : Imember[], index : number) : Imember | null{
+        for(let i=0 ; i<data.length ; i++){
+            if(pathArr[index] === data[i].getName()){
+                if(pathArr.length-1 === index)
+                    return data[i];
+                else {
+                    return InitTree.getMemberFromPathArr(pathArr, data[i].getItems(), ++index);
+                }
+            }
+        }
+        return null;
+    }
+
+
+    static clearFocusClass() {
          let itemFocused = $('.inFocus');
          itemFocused.removeClass('inFocus');
      }
 
-     SetReciver(item : any){
-         StateStore.getInstance().set('Reciver', 'qqqq');
-     }
-
-
-
-
     keyup = (e: any) => {
+        e.stopPropagation();
+
         switch(e.key){
             case 'ArrowRight':
                 this.ArrowRight();
+                InitTree.inFocusChanged();
                 break;
             case 'ArrowLeft':
                 this.ArrowLeft();
+                InitTree.inFocusChanged();
                 break;
             case 'ArrowUp':
                 this.ArrowUp();
+                InitTree.inFocusChanged();
                 break;
             case 'ArrowDown':
                 this.ArrowDown();
+                InitTree.inFocusChanged();
                 break;
             case 'Enter':
                 this.Enter();
                 break;
         }
+
         console.log('keypress');
     };
 
@@ -150,7 +179,7 @@ export class InitTree {
         if(parent.length === 0)
             return;
         else if(!children || children[0].hasClass('hidden')){
-            if(!!$(parent).data('parent')) {
+            if($(parent).data('parent') !== '') {
                 InitTree.clearFocusClass();
                 $(parent).data('parent').addClass('inFocus');
             }
@@ -168,17 +197,14 @@ export class InitTree {
         if(current.length === 0)
             return;
         else {
-            let arrLi =  this.element.find('li');
-            let index = arrLi.length-1;
+            let arrLi =  this.element.find('li:not(.hidden)');
 
-            for( ; index >= 0 ; index--){
-                if($(arrLi[index]).text() === current.text())
-                    break;
-            }
-            for(let i=--index ; i>=0 ; i--){
-                if(!$(arrLi[i]).hasClass('hidden')){
+            for(let index = arrLi.length-1 ; index >= 0 ; index--){
+                if($(arrLi[index]).text() === current.text() &&
+                    $(arrLi[index]).data('parent') === current.data('parent') &&
+                    (index-1) >= 0){
                     InitTree.clearFocusClass();
-                    $(arrLi[i]).addClass('inFocus');
+                    $(arrLi[index - 1]).addClass('inFocus');
                     break;
                 }
             }
@@ -190,17 +216,14 @@ export class InitTree {
         if(current.length === 0)
             $(this.element.find('li')[0]).addClass('inFocus');
         else {
-            let arrLi =  this.element.find('li');
-            let index = 0;
+            let arrLi =  this.element.find('li:not(.hidden)');
 
-            for( ; index <arrLi.length ; index++){
-                if($(arrLi[index]).text() === current.text())
-                    break;
-            }
-            for(let i=++index ; i<arrLi.length ; i++){
-                if(!$(arrLi[i]).hasClass('hidden')){
+            for(let index = 0 ; index <arrLi.length ; index++){
+                if($(arrLi[index]).text() === current.text() &&
+                    $(arrLi[index]).data('parent') === current.data('parent') &&
+                    (index+1) < arrLi.length ){
                     InitTree.clearFocusClass();
-                    $(arrLi[i]).addClass('inFocus');
+                    $(arrLi[index + 1]).addClass('inFocus');
                     break;
                 }
             }

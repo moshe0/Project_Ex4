@@ -30,7 +30,7 @@ html, body, .bodyClass, #root {
 .left {
   width: 25%;
   border-right: 1px solid black;
-  background-color: #b0cfb2;
+  background-color: #9bba9d;
 }
 
 .right {
@@ -51,14 +51,15 @@ html, body, .bodyClass, #root {
 
 .MessageInput{
   flex-grow: 1;
-  font-size: 25px;
+  font-size: 23px;
+    font-family: Calibri;
   border-bottom-left-radius: 15px;
   border-top-left-radius: 15px;
   margin: 5px 0px 5px 5px;
   padding: 5px 5px 5px 12px;
 }
 
-button{
+.buttonActive{
   margin: 5px 5px 5px 0px;
   border-bottom-right-radius: 15px;
   border-top-right-radius: 15px;
@@ -69,7 +70,18 @@ button{
   border-color: white;
 }
 
-button:hover {
+.buttonDisabled{
+    margin: 5px 5px 5px 0px;
+    border-bottom-right-radius: 15px;
+    border-top-right-radius: 15px;
+    background-color: gainsboro;
+    font-size: 25px;
+    min-width: 100px;
+    color: white;
+    border-color: white;
+}
+
+.buttonActive:hover {
   background-color: #046204;
 }
 /*************************************************************************************/
@@ -170,6 +182,8 @@ div.LoginImage:active{
     margin: 0;
     list-style: none;
     outline: none;
+    height: 97.1%;
+    overflow-y: scroll;
 }
 
 .group{
@@ -182,7 +196,7 @@ div.LoginImage:active{
 
 .inFocus{
     border: 1px solid black;
-    background: #057505;
+    background: #059505;
 }
 
 .hidden{
@@ -191,7 +205,6 @@ div.LoginImage:active{
 
 li{
     user-select: none;
-    background: #b0cfb2;
     color: white;
 }
 /***********************************************/
