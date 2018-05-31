@@ -108,11 +108,11 @@ html, body, .bodyClass, #root {
 
 .OtherMessage{
   float: right;
-  background: palegreen;
+  background: #F7F7F7;
 }
 
 .MineMessage{
-  background: #F7F7F7;
+  background: palegreen;
 }
 
 .MessageHistory{
@@ -138,6 +138,13 @@ html, body, .bodyClass, #root {
     margin-top: 5px;
     margin-buttom: 5px;
 }
+
+.MessageUserSending{
+    font-size: 13px;
+    font-weight: bold;
+    direction: rtl;
+}
+
 /***********************************************************************/
 
 
@@ -153,6 +160,7 @@ html, body, .bodyClass, #root {
   height: 32px;
   margin: 7px;
   float: right;
+  cursor: pointer;
 }
 
 div.LoginImage:hover{
@@ -208,3 +216,6 @@ li{
     color: white;
 }
 /***********************************************/
+
+
+

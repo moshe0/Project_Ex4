@@ -20,6 +20,11 @@ class Header extends React.Component<{},IHeaderState>  {
         });
     }
 
+    LoginImage = () =>{
+        StateStore.getInstance().set('HoldReciver', StateStore.getInstance().get('Reciver'));
+        StateStore.getInstance().set('Reciver', null);
+        StateStore.getInstance().set('LogOutState', true);
+    };
 
     public render() {
         let userName = 'Not connected';
@@ -27,7 +32,7 @@ class Header extends React.Component<{},IHeaderState>  {
             userName = this.state.currentUser.Name;
         return (
             <div className="Header">
-                <div className="LoginImage"/>
+                <div className="LoginImage" onClick={this.LoginImage}/>
                 <div className="LoginStatus">{userName}</div>
             </div>
         );

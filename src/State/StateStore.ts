@@ -21,14 +21,17 @@ export class StateStore implements IStateStore {
     Data : Imember[];
     currentUser : User;
     Reciver : Imember;
+    HoldReciver : Imember;
+    LogOutState : boolean;
 
     state: {} = {
         Users : DB.GetUsers(),
         Groups : DB.GetGroups(),
         Data : DB.GetData(),
         currentUser : null,
-        Reciver : DB.GetUsers()[2],
-        // Reciver : null,
+        Reciver : null,
+        HoldReciver : null,
+        LogOutState : false,
     };
 
     constructor(){

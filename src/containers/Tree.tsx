@@ -1,6 +1,7 @@
 import * as React from "react";
 import * as $ from 'jquery';
 import {InitTree} from "../Helpers/InitTree";
+import StateStore from "../state/StateStore";
 
 
 
@@ -14,8 +15,8 @@ class Tree extends React.Component <{}, {}>{
 
 
     componentDidMount() {
-        new InitTree($(this.ref));
-
+        if(!!StateStore.getInstance().get('currentUser'))
+            new InitTree($(this.ref));
     }
 
     componentWillUnmount() {

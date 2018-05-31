@@ -10,6 +10,8 @@ export class DB {
         new Message("מה עניינים?", 'Yosef', 'Moshe', moment().format('h:mm:ss')),
         new Message("מצוין", 'Moshe', 'Yosef', moment().format('h:mm:ss')),
         new Message("יופי, להתראות", 'Yosef', 'Moshe', moment().format('h:mm:ss')),
+        new Message("יופי, להתראות", 'Yosef', 'Friends', moment().format('h:mm:ss')),
+
     ];
 
     static Users = [
@@ -54,12 +56,20 @@ export class DB {
     }
 
 
-    static GetMessages(sender :string, reciver : string) : Message[]{
+    static GetMessages(sender :Imember, reciver : Imember) : Message[]{
         let resMessages : Message[] = [];
-        for(let i : number = 0 ; i<DB.Messages.length ; i++){
-            if(DB.Messages[i].SendingUser === sender && DB.Messages[i].Receiving === reciver ||
-               DB.Messages[i].SendingUser === reciver && DB.Messages[i].Receiving === sender)
-                resMessages.push(DB.Messages[i]);
+        if(reciver.getType() === 'group'){
+            for (let i: number = 0; i < DB.Messages.length; i++) {
+                if (DB.Messages[i].Receiving === reciver.getName())
+                    resMessages.push(DB.Messages[i]);
+            }
+        }
+        else {
+            for (let i: number = 0; i < DB.Messages.length; i++) {
+                if (DB.Messages[i].SendingUser === sender.getName() && DB.Messages[i].Receiving === reciver.getName() ||
+                    DB.Messages[i].SendingUser === reciver.getName() && DB.Messages[i].Receiving === sender.getName())
+                    resMessages.push(DB.Messages[i]);
+            }
         }
         return resMessages;
     }
@@ -78,6 +88,13 @@ export class DB {
             return this.Users;
     }
 
+    static GetSpecificUser(userLogin : string, passwordLogin : string){
+        for(let item of DB.Users){
+            if(item.Name === userLogin && item.Password === passwordLogin)
+                return item;
+        }
+        return null;
+    }
 
     static GetGroups() : Group[]{
         if(! DB.Groups)
