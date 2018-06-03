@@ -72,23 +72,23 @@ class MessageHistory extends React.Component <{}, IMessageState>{
             if(Reciver === 'group') {
                 return (
                     <div className={'message'} key={idx}>
-                    <pre className={itemClassName}>
+                    <div className={itemClassName}>
                         <div className={'MessageUserSending'}>{item.SendingUser}</div>
                         {item.Content}
                         <br/>
                         <div className={'MessageTime'}>{item.TimeSent}</div>
-                    </pre>
+                    </div>
                     </div>
                 );
             }
             else{
                 return (
                     <div className={'message'} key={idx}>
-                    <pre className={itemClassName}>
+                    <div className={itemClassName}>
                         {item.Content}
                         <br/>
                         <div className={'MessageTime'}>{item.TimeSent}</div>
-                    </pre>
+                    </div>
                     </div>
                 );
             }

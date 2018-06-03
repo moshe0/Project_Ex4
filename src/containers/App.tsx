@@ -92,7 +92,6 @@ class App extends React.Component<{}, IAppUserState>{
                         </p>
                         <button style={styles.button} onClick={this.Yes}>Yes</button>
                         <button style={styles.button} onClick={this.No}>No</button>
-
                     </Modal>
                     <Header/>
                     <Main/>
