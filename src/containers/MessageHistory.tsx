@@ -34,6 +34,7 @@ class MessageHistory extends React.Component <{}, IMessageState>{
         });
     }
 
+    //Befor render
     componentWillMount(){
         if(!! this.stateStore.get('currentUser') && !! this.stateStore.get('Reciver')) {
             this.setState({
@@ -47,10 +48,12 @@ class MessageHistory extends React.Component <{}, IMessageState>{
         }
     }
 
+    //After render
     componentDidMount(){
         this.messagesBlock.current.scrollTop = this.messagesBlock.current.scrollHeight;
     }
 
+    // After updating occurs
     componentDidUpdate(){
         this.messagesBlock.current.scrollTop = this.messagesBlock.current.scrollHeight;
     }

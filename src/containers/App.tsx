@@ -7,7 +7,6 @@ import {DB} from "../dataBase/DB";
 
 
 interface IAppUserState{
-    currentUser : any,
     userLogin : string,
     passwordLogin : string
 }
@@ -17,12 +16,10 @@ class App extends React.Component<{}, IAppUserState>{
         super(props);
 
         this.state = {
-            currentUser : null,
             userLogin: 'Moshe',
             passwordLogin: '11'
         };
 
-        StateStore.getInstance().set('currentUser', this.state.currentUser);
         StateStore.getInstance().subscribe(()=>{
             this.forceUpdate();
         });
@@ -31,22 +28,29 @@ class App extends React.Component<{}, IAppUserState>{
     Login = () => {
         const LoginUser = DB.GetSpecificUser(this.state.userLogin, this.state.passwordLogin);
         if(!!LoginUser) {
-            StateStore.getInstance().set('currentUser', LoginUser);
-            this.setState({'currentUser': LoginUser});
+            StateStore.getInstance().setMany({
+                'currentUser' : LoginUser,
+                'Data' : DB.GetData()
+            });
         }
     };
 
     Yes = () => {
-        StateStore.getInstance().set('LogOutState', false);
-        StateStore.getInstance().set('HoldReciver', null);
-        StateStore.getInstance().set('currentUser', null);
-        this.setState({'currentUser': null});
+        StateStore.getInstance().setMany({
+            'LogOutState': false,
+            'HoldReciver': null,
+            'currentUser': null,
+            'Data': [],
+            'TreeState': []
+        });
     };
 
     No = () => {
-        StateStore.getInstance().set('LogOutState', false);
-        StateStore.getInstance().set('Reciver', StateStore.getInstance().get('HoldReciver'));
-        StateStore.getInstance().set('HoldReciver', null);
+        StateStore.getInstance().setMany({
+            'LogOutState': false,
+            'Reciver': StateStore.getInstance().get('HoldReciver'),
+            'HoldReciver': null,
+        });
     };
 
 
@@ -62,7 +66,11 @@ class App extends React.Component<{}, IAppUserState>{
     };
 
     public render() {
-        if(this.state.currentUser === null){
+/*        const Bla = (
+            <Header/>
+            <Main/>
+        );*/
+        if(StateStore.getInstance().get('currentUser') === null){
             const canLogin = !!this.state.userLogin && !!this.state.passwordLogin;
             return (
                 <div className="bodyClass">

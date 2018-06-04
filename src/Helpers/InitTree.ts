@@ -5,12 +5,41 @@ import Imember from "../Model/Imember";
 
 
 export class InitTree {
-    data = StateStore.getInstance().get('Data');
-    constructor(public element : any){
-        let ul = document.querySelector("ul");
-        if(ul)
-            ul.addEventListener('keyup', this.keyup);
-        this.Load();
+    data : Imember[];
+    static NeedIgnore = false;
+
+    constructor(public element : any, public Alldata : Imember[]){
+        this.data = Alldata;
+        if(InitTree.NeedIgnore){
+            let ul = document.querySelector("ul");
+            if (ul)
+                ul.addEventListener('keyup', this.keyup);
+
+            let lis = StateStore.getInstance().get('TreeState');
+            for(let li of lis)
+                $(li).appendTo(element);
+            StateStore.getInstance().set('TreeState', null);
+            InitTree.NeedIgnore = false;
+            return;
+        }
+        if(!! StateStore.getInstance().get('LogOutState') )
+            InitTree.NeedIgnore = true;
+
+        if(!! StateStore.getInstance().get('TreeState')) {
+            let ul = document.querySelector("ul");
+            if (ul)
+                ul.addEventListener('keyup', this.keyup);
+
+            let lis = StateStore.getInstance().get('TreeState');
+            for(let li of lis)
+                $(li).appendTo(element);
+        }
+        else {
+            let ul = document.querySelector("ul");
+            if (ul)
+                ul.addEventListener('keyup', this.keyup);
+            this.Load();
+        }
     }
 
 

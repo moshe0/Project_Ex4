@@ -7,6 +7,7 @@ import Imember from "../Model/Imember";
 interface IStateStore {
     state: {};
     set(key: string, val: any): void
+    setMany({}): void
     get(key: string): any | null
     subscribe(listener :any) : void
     onStoreChanged() : void
@@ -23,6 +24,7 @@ export class StateStore implements IStateStore {
     Reciver : Imember;
     HoldReciver : Imember;
     LogOutState : boolean;
+    TreeState : any;
 
     state: {} = {
         Users : DB.GetUsers(),
@@ -32,6 +34,7 @@ export class StateStore implements IStateStore {
         Reciver : null,
         HoldReciver : null,
         LogOutState : false,
+        TreeState : null
     };
 
     constructor(){
@@ -40,6 +43,11 @@ export class StateStore implements IStateStore {
 
     set(key: string, val: any) {
         this.state[key] = val;
+        this.onStoreChanged();
+    }
+
+    setMany(dict: {}) {
+        this.state = Object.assign(this.state, dict);
         this.onStoreChanged();
     }
 
