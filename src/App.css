@@ -140,6 +140,7 @@ html, body, .bodyClass, #root {
 
 .MessageUserSending{
     font-size: 13px;
+    color: #42a4ff;
     font-weight: bold;
     direction: rtl;
 }
@@ -215,6 +216,3 @@ li{
     color: white;
 }
 /***********************************************/
-
-
-

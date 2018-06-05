@@ -31,6 +31,11 @@ class MessageHistory extends React.Component <{}, IMessageState>{
                     Messages: DB.GetMessages(this.stateStore.get('currentUser'), this.stateStore.get('HoldReciver'))
                 });
             }
+            else{
+                this.setState({
+                    Messages: []
+                });
+            }
         });
     }
 

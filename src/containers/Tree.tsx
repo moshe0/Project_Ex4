@@ -2,38 +2,29 @@ import * as React from "react";
 import * as $ from 'jquery';
 import {InitTree} from "../Helpers/InitTree";
 import StateStore from "../state/StateStore";
-import Imember from "../Model/Imember";
 
 
-interface ITreeProps{
-    data : Imember[]
-}
-
-
-class Tree extends React.Component <ITreeProps, {}>{
+class Tree extends React.Component <{}, {}>{
     ref : any;
 
-    constructor(props: ITreeProps) {
+    constructor(props: {}) {
         super(props);
         this.ref = null;
     }
 
 
     //After first render
-/*    componentDidMount() {
-        console.log('componentDidMount', StateStore.getInstance().get('Data'));
+    componentDidMount() {
+        console.log('componentDidMount');
 
-        if(!!StateStore.getInstance().get('currentUser')) {
-            new InitTree($(this.ref), StateStore.getInstance().get('Data'));
-        }
-    }*/
+    }
 
-    componentDidUpdate() {
+    shouldComponentUpdate(){
         console.log('componentDidUpdate');
         console.log('Data: ', StateStore.getInstance().get('Data'));
         console.log('currentUser: ', StateStore.getInstance().get('currentUser'));
         console.log('LogInState: ' ,StateStore.getInstance().get('LogInState'));
-        console.log('LogIOutState: ' ,StateStore.getInstance().get('LogIOutState'));
+        console.log('LogIOutState: ' , StateStore.getInstance().get('LogIOutState'));
 
         if(!!StateStore.getInstance().get('currentUser') &&
             !StateStore.getInstance().get('LogInState') &&
@@ -42,11 +33,16 @@ class Tree extends React.Component <ITreeProps, {}>{
             ||
             StateStore.getInstance().get('LogInState') &&
             StateStore.getInstance().get('LogOutState')
-        ){
-            StateStore.FirstUse = 0;
-            new InitTree($(this.ref), StateStore.getInstance().get('Data'));
-            console.log('****  Done  ****');
+        ) {
+            return true;
         }
+        return false;
+    }
+
+    componentDidUpdate() {
+        StateStore.FirstUse = 0;
+        new InitTree($(this.ref), StateStore.getInstance().get('Data'));
+        console.log('****  Done  ****');
     }
 
     //Befor component dead
