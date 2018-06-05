@@ -28,20 +28,22 @@ class App extends React.Component<{}, IAppUserState>{
     Login = () => {
         const LoginUser = DB.GetSpecificUser(this.state.userLogin, this.state.passwordLogin);
         if(!!LoginUser) {
+            StateStore.FirstUse = 1;
             StateStore.getInstance().setMany({
                 'currentUser' : LoginUser,
-                'Data' : DB.GetData()
+                'Data' : DB.GetData(),
+                'LogOutState': false,
+                'LogInState': false
             });
         }
     };
 
     Yes = () => {
         StateStore.getInstance().setMany({
-            'LogOutState': false,
             'HoldReciver': null,
             'currentUser': null,
-            'Data': [],
-            'TreeState': []
+            'Data' : [],
+            'LogInState': true,
         });
     };
 
@@ -66,14 +68,11 @@ class App extends React.Component<{}, IAppUserState>{
     };
 
     public render() {
-/*        const Bla = (
-            <Header/>
-            <Main/>
-        );*/
+        let HtmlRet;
+
         if(StateStore.getInstance().get('currentUser') === null){
             const canLogin = !!this.state.userLogin && !!this.state.passwordLogin;
-            return (
-                <div className="bodyClass">
+            HtmlRet = (
                 <Modal style={styles.modal}>
                     <p style={styles.p}>
                         <label style={styles.label} htmlFor="userLogin">Username</label>
@@ -85,36 +84,34 @@ class App extends React.Component<{}, IAppUserState>{
                     </p>
                     <button style={canLogin ? styles.button : styles.buttonDisabled} disabled={!canLogin} onClick={this.Login}>Login</button>
                 </Modal>
-                    <Header/>
-                    <Main/>
-                </div>
             );
         }
 
         else if(StateStore.getInstance().get('LogOutState') === true) {
-            return (
-                <div className="bodyClass">
-                    <Modal style={styles.modal}>
-                        <p style={styles.p}>
-                            Do you want to logout?
-                        </p>
-                        <button style={styles.button} onClick={this.Yes}>Yes</button>
-                        <button style={styles.button} onClick={this.No}>No</button>
-                    </Modal>
-                    <Header/>
-                    <Main/>
-                </div>
+            HtmlRet = (
+                <Modal style={styles.modal}>
+                    <p style={styles.p}>
+                        Do you want to logout?
+                    </p>
+                    <button style={styles.button} onClick={this.Yes}>Yes</button>
+                    <button style={styles.button} onClick={this.No}>No</button>
+                </Modal>
             );
         }
 
         else {
-            return (
-                <div className="bodyClass">
-                    <Header/>
-                    <Main/>
-                </div>
+            HtmlRet = (
+                <span/>
             );
         }
+
+        return (
+            <div className="bodyClass">
+                {HtmlRet}
+                <Header/>
+                <Main/>
+            </div>
+        );
     }
 }
 

@@ -1,4 +1,3 @@
-// import {DB} from "../dataBase/DB";
 import StateStore from "../state/StateStore";
 import * as $ from "jquery";
 import Imember from "../Model/Imember";
@@ -10,36 +9,10 @@ export class InitTree {
 
     constructor(public element : any, public Alldata : Imember[]){
         this.data = Alldata;
-        if(InitTree.NeedIgnore){
-            let ul = document.querySelector("ul");
-            if (ul)
-                ul.addEventListener('keyup', this.keyup);
-
-            let lis = StateStore.getInstance().get('TreeState');
-            for(let li of lis)
-                $(li).appendTo(element);
-            StateStore.getInstance().set('TreeState', null);
-            InitTree.NeedIgnore = false;
-            return;
-        }
-        if(!! StateStore.getInstance().get('LogOutState') )
-            InitTree.NeedIgnore = true;
-
-        if(!! StateStore.getInstance().get('TreeState')) {
-            let ul = document.querySelector("ul");
-            if (ul)
-                ul.addEventListener('keyup', this.keyup);
-
-            let lis = StateStore.getInstance().get('TreeState');
-            for(let li of lis)
-                $(li).appendTo(element);
-        }
-        else {
-            let ul = document.querySelector("ul");
-            if (ul)
-                ul.addEventListener('keyup', this.keyup);
-            this.Load();
-        }
+        let ul = document.querySelector("ul");
+        if (ul)
+            ul.onkeyup = this.keyup;
+        this.Load();
     }
 
 

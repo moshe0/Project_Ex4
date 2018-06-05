@@ -20,15 +20,32 @@ class Tree extends React.Component <ITreeProps, {}>{
 
 
     //After first render
-    componentDidMount() {
-        if(!!StateStore.getInstance().get('currentUser'))
+/*    componentDidMount() {
+        console.log('componentDidMount', StateStore.getInstance().get('Data'));
+
+        if(!!StateStore.getInstance().get('currentUser')) {
             new InitTree($(this.ref), StateStore.getInstance().get('Data'));
-    }
+        }
+    }*/
 
     componentDidUpdate() {
-        if(!StateStore.getInstance().get('currentUser')){
+        console.log('componentDidUpdate');
+        console.log('Data: ', StateStore.getInstance().get('Data'));
+        console.log('currentUser: ', StateStore.getInstance().get('currentUser'));
+        console.log('LogInState: ' ,StateStore.getInstance().get('LogInState'));
+        console.log('LogIOutState: ' ,StateStore.getInstance().get('LogIOutState'));
+
+        if(!!StateStore.getInstance().get('currentUser') &&
+            !StateStore.getInstance().get('LogInState') &&
+            !StateStore.getInstance().get('LogOutState') &&
+            StateStore.FirstUse === 1
+            ||
+            StateStore.getInstance().get('LogInState') &&
+            StateStore.getInstance().get('LogOutState')
+        ){
+            StateStore.FirstUse = 0;
             new InitTree($(this.ref), StateStore.getInstance().get('Data'));
-            console.log('componentDidUpdate');
+            console.log('****  Done  ****');
         }
     }
 
@@ -45,12 +62,6 @@ class Tree extends React.Component <ITreeProps, {}>{
     };
 
     public render() {
-        // console.log("Component will render.", StateStore.getInstance().get('Data'));
-        // if(!!StateStore.getInstance().get('currentUser'))
-        //     return (<ul className="left tree" ref={this.setRef} tabIndex={0}/>);
-        // return (<div className="left tree"/>);
-
-        console.log("Component will render.", StateStore.getInstance().get('Data'));
         return (<ul className="left tree" ref={this.setRef} tabIndex={0}/>);
     }
 }

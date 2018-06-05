@@ -21,7 +21,7 @@ const blackScreenStyle: React.CSSProperties = {
     position: "fixed",
     right: "0",
     top: "0",
-    background: "rgba(0, 0, 0, 0.7)",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
     zIndex: 1,
     display: 'flex',
     alignItems: 'center',

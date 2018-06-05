@@ -16,6 +16,7 @@ interface IStateStore {
 export class StateStore implements IStateStore {
     listeners: Function[];
     static instance: IStateStore;
+    static FirstUse = 1;
 
     Users : User[];
     Groups : Group[];
@@ -24,6 +25,7 @@ export class StateStore implements IStateStore {
     Reciver : Imember;
     HoldReciver : Imember;
     LogOutState : boolean;
+    LogInState : boolean;
     TreeState : any;
 
     state: {} = {
@@ -34,6 +36,7 @@ export class StateStore implements IStateStore {
         Reciver : null,
         HoldReciver : null,
         LogOutState : false,
+        LogInState : true,
         TreeState : null
     };
 
