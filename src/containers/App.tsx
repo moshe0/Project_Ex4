@@ -2,8 +2,10 @@ import Header from './Header';
 import Main from './Main';
 import * as React from 'react'
 import StateStore from "../state/StateStore";
-import Modal from "./Modal";
 import {DB} from "../dataBase/DB";
+import LogIn from "../components/LogIn";
+import LogOut from "../components/LogOut";
+import {BrowserRouter, Redirect, Route} from 'react-router-dom';
 
 
 
@@ -13,6 +15,8 @@ interface IAppUserState{
 }
 
 class App extends React.Component<{}, IAppUserState>{
+    canLogin : boolean;
+
     constructor(props: {}) {
         super(props);
 
@@ -57,7 +61,7 @@ class App extends React.Component<{}, IAppUserState>{
     };
 
 
-    private InputChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
+    public InputChangedHandler = (event: React.ChangeEvent<HTMLInputElement>) => {
         let name = event.target.name;
         const value = event.target.value;
 
@@ -68,90 +72,40 @@ class App extends React.Component<{}, IAppUserState>{
 
     };
 
+    ShowLogin = () => {
+        const canLogin = !!this.state.userLogin && !!this.state.passwordLogin;
+
+        if (!!StateStore.getInstance().get('currentUser')) {
+            return (<Redirect to="/" />)
+        }
+
+        return <LogIn canLogin={canLogin} passwordLogin={this.state.passwordLogin} userLogin={this.state.userLogin} InputChangedHandler={this.InputChangedHandler} LoginCallback={this.Login}/>
+    };
+
+    ShowLogOut = () => {
+        if (!StateStore.getInstance().get('currentUser')) {
+            return (<Redirect to="/LogIn" />)
+        }
+
+        return <LogOut YesCallback={this.Yes} NoCallback={this.No}/>
+    };
+
     public render() {
-        let HtmlRet;
-
-        if(StateStore.getInstance().get('currentUser') === null){
-            const canLogin = !!this.state.userLogin && !!this.state.passwordLogin;
-            HtmlRet = (
-                <Modal style={styles.modal}>
-                    <p style={styles.p}>
-                        <label style={styles.label} htmlFor="userLogin">Username</label>
-                        <input style={styles.input} type="text" name="userLogin" value={this.state.userLogin} onChange={this.InputChangedHandler} />
-                    </p>
-                    <p>
-                        <label style={styles.label} htmlFor="passwordLogin">Password</label>
-                        <input style={styles.input} type="password" name="passwordLogin" value={this.state.passwordLogin} onChange={this.InputChangedHandler} />
-                    </p>
-                    <button style={canLogin ? styles.button : styles.buttonDisabled} disabled={!canLogin} onClick={this.Login}>Login</button>
-                </Modal>
-            );
-        }
-
-        else if(StateStore.getInstance().get('LogOutState') === true) {
-            HtmlRet = (
-                <Modal style={styles.modal}>
-                    <p style={styles.p}>
-                        Do you want to logout?
-                    </p>
-                    <button style={styles.button} onClick={this.Yes}>Yes</button>
-                    <button style={styles.button} onClick={this.No}>No</button>
-                </Modal>
-            );
-        }
-
-        else {
-            HtmlRet = (
-                <span/>
-            );
-        }
-
+        const currentUser = !!StateStore.getInstance().get('currentUser');
+        console.log(">>>>>>>>>>>>>>", currentUser);
         return (
-            <div className="bodyClass">
-                {HtmlRet}
-                <Header/>
-                <Main/>
-            </div>
+            <BrowserRouter>
+                <div className="bodyClass">
+                    {!currentUser ? (<Redirect to='/LogIn'/>) : <div/>}
+                    <Route path='/LogIn' render={this.ShowLogin}/>
+                    <Route path='/LogOut' render={this.ShowLogOut}/>
+                    <Header/>
+                    <Main/>
+                </div>
+            </BrowserRouter>
         );
     }
 }
 
-
-const styles: { [key: string]: React.CSSProperties } = {
-    modal: {
-        minWidth: '50px'
-    },
-    p: {
-        margin: "0 0 0.5em 0",
-        fontSize: '20px'
-    },
-    label: {
-        display: "inline-block",
-        marginBottom: ".5rem",
-        fontSize: '20px'
-    },
-    input: {
-        display: "block",
-        width: "100%",
-        outline: 'none',
-        fontSize: '20px',
-        borderRadius: '5px',
-    },
-    button: {
-        background: '#5077bb',
-        color: 'white',
-        fontSize: '20px',
-        cursor: 'pointer',
-        borderRadius: '5px'
-    },
-};
-
-styles.buttonDisabled = {
-    background: '#DDDDDD',
-    color: '#444753',
-    fontSize: '20px',
-    cursor: 'pointer',
-    borderRadius: '5px'
-};
 
 export default App;
